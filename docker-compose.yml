@@ -1,7 +1,11 @@
 version: "3.7"
 services:
   service:
-    image: aanousakis/no-ip:latest
+    build:
+      context: .
+      args:
+          ALPINE_VERSION: "latest"
+    container_name: no-ip-update-client
     environment:
       USERNAME_FILE: /run/secrets/username
       PASSWORD_FILE: /run/secrets/password
@@ -12,18 +16,15 @@ services:
       - password
       - domains
       - interval
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
+    restart: unless-stopped
 
 secrets:
  username:
-   external: true
+   file: ./secrets/username.txt
  password:
-   external: true
+   file: ./secrets/password.txt
  domains:
-   external: true 
+   file: ./secrets/domains.txt
  interval:
-   external: true
+   file: ./secrets/interval.txt
 
