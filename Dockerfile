@@ -4,20 +4,23 @@ FROM alpine:${ALPINE_VERSION} AS builder
 
 WORKDIR /src
 
-RUN 	   apk update 	                                                    \
-	&& apk add wget gcc make libc-dev git                               \
-	&& wget https://www.noip.com/client/linux/noip-duc-linux.tar.gz     \
-	&& tar xzf noip-duc-linux.tar.gz                 		    \
-	&& rm noip-duc-linux.tar.gz                                         \
-	&& mv noip* noip_src                                                \
-      && git clone https://github.com/0xFireWolf/STUNExternalIP.git       \
-      && cd STUNExternalIP                                                \
+RUN 	   apk update 	                                                                  \
+      && apk add wget gcc make libc-dev git curl                                          \
+      && curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y          \
+      && wget https://dmej8g5cpdyqd.cloudfront.net/downloads/noip-duc_3.0.0-beta.7.tar.gz \
+      && tar xf noip-duc_3.0.0-beta.7.tar.gz                                              \
+      && rm noip-duc_3.0.0-beta.7.tar.gz                                                  \
+      && mv noip* noip_src                                                                \
+      && git clone https://github.com/0xFireWolf/STUNExternalIP.git                       \
+      && cd STUNExternalIP                                                                \
       && sed -i 's/#include <time.h>/#include <sys\/time.h>\n#include <time.h>/' STUNExternalIP.c    \
       && make
 
 WORKDIR noip_src
 
-RUN  make
+
+ENV PATH="/root/.cargo/bin:${PATH}"
+RUN  cargo build --release
 
 FROM alpine:${ALPINE_VERSION}
 
@@ -33,7 +36,7 @@ USER noip
 WORKDIR /scripts/
 
 COPY --from=builder /src/STUNExternalIP/STUNExternalIP /usr/local/bin
-COPY --from=builder /src/noip_src/noip2 /usr/local/bin
+COPY --from=builder /src/noip_src/target/release/noip-duc /usr/local/bin
 COPY scripts/* /scripts/
 
 

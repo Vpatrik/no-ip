@@ -1,6 +1,6 @@
 version: "3.7"
 services:
-  service:
+  no-ip:
     build:
       context: .
       args:
@@ -17,6 +17,11 @@ services:
       - domains
       - interval
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "./healthcheck.sh"]
+      timeout: 30s
+      interval: 60m
+      retries: 10
 
 secrets:
  username:
