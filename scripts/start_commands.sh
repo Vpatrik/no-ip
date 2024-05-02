@@ -28,7 +28,7 @@ fi
 # start no-ip dns update client
 echo "Starting noip-duc"
 
-noip-duc --hostnames "$DOMAINS" --check-interval "$INTERVAL" --username "$USERNAME" --password "$PASSWORD" &
+noip-duc --hostnames "$DOMAINS" --log-level info --check-interval "$INTERVAL" --username "$USERNAME" --password "$PASSWORD" &
 
 while sleep 10; do
 
