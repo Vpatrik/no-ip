@@ -7,9 +7,9 @@ WORKDIR /src
 RUN 	   apk update 	                                                                  \
       && apk add wget gcc make libc-dev git curl                                          \
       && curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y          \
-      && wget https://dmej8g5cpdyqd.cloudfront.net/downloads/noip-duc_3.0.0.tar.gz        \
-      && tar xf noip-duc_3.0.0.tar.gz                                              \
-      && rm noip-duc_3.0.0.tar.gz                                                  \
+      && wget -O latest.tar.gz https://www.noip.com/download/linux/latest        \
+      && tar xf latest.tar.gz                                              \
+      && rm latest.tar.gz                                                  \
       && mv noip* noip_src                                                                \
       && git clone https://github.com/0xFireWolf/STUNExternalIP.git                       \
       && cd STUNExternalIP                                                                \

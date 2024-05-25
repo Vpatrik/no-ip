@@ -4,12 +4,12 @@ services:
     build:
       context: .
       args:
-          ALPINE_VERSION: "latest"
+        ALPINE_VERSION: "latest"
     container_name: no-ip-update-client
     environment:
       USERNAME_FILE: /run/secrets/username
       PASSWORD_FILE: /run/secrets/password
-      DOMAINS_FILE:  /run/secrets/domains
+      DOMAINS_FILE: /run/secrets/domains
       INTERVAL_FILE: /run/secrets/interval
     secrets:
       - username
@@ -18,18 +18,17 @@ services:
       - interval
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "./healthcheck.sh"]
-      timeout: 30s
+      test: [ "CMD", "./healthcheck.sh" ]
+      timeout: 180s
       interval: 60m
       retries: 10
 
 secrets:
- username:
-   file: ./secrets/username.txt
- password:
-   file: ./secrets/password.txt
- domains:
-   file: ./secrets/domains.txt
- interval:
-   file: ./secrets/interval.txt
-
+  username:
+    file: ./secrets/username.txt
+  password:
+    file: ./secrets/password.txt
+  domains:
+    file: ./secrets/domains.txt
+  interval:
+    file: ./secrets/interval.txt
